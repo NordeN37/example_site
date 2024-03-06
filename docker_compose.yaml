@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  example_site:
+    image: norden37/example_site
+    container_name: example_site
+    ports:
+      - "8051:80"
