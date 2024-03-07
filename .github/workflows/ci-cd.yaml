@@ -30,4 +30,5 @@ jobs:
             docker pull norden37/example_site:latest 
             docker stop example_site
             docker rm example_site
+            docker rmi -f $(docker images norden37/example_site -q)
             docker run -e DOMAIN=${{ vars.MY_DOMAIN_HOME }} --name example_site -p 80:80 -d norden37/example_site
