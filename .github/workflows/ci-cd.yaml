@@ -6,20 +6,23 @@ on:
       - main
 
 jobs:
-  deploy:
+  checkout:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-
+  build:
+    runs-on: ubuntu-latest
+    steps:
       - name: Build and Push Docker Images
         run: |
           docker build -t example_site .
           docker tag example_site:latest norden37/example_site:latest
           docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASS }}
           docker push norden37/example_site:latest
-
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
       - name: Run sshpass commands
         uses: matheusvanzan/sshpass-action@v2
         with:
