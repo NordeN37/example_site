@@ -1,17 +1,18 @@
-FROM golang:1.21.1-alpine as builder
+ARG GO_VER=1.21.1
+FROM golang:${GO_VER}-alpine as builder
 
 # ARG GO_MAIN_PATH
 ARG VERSION=0.1
-WORKDIR /src
-COPY . .
+WORKDIR /app
+COPY . /app
 
-RUN apk --no-cache update && apk --no-cache add git gcc libc-dev
-
-RUN CGO_ENABLED=1 GOOS=linux go build -tags musl -mod=vendor -a -installsuffix cgo -o app -ldflags "-X 'main.Version=${VERSION}'" ./main.go
+RUN go build -o main
+# Expose port 8080 to the outside world
 FROM alpine
 
 WORKDIR /root/
-COPY --from=builder /src .
-EXPOSE 80
+COPY --from=builder /app .
 
-CMD ["./app"]
+EXPOSE 8081
+
+CMD ["./main"]

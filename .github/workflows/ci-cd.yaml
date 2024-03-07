@@ -1,0 +1,33 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Build and Push Docker Images
+        run: |
+          docker build -t example_site .
+          docker tag example_site:latest norden37/example_site:latest
+          docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASS }}
+          docker push norden37/example_site:latest
+
+      - name: Run sshpass commands
+        uses: matheusvanzan/sshpass-action@v2
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          user: ${{ secrets.SSH_USER }}
+          pass: ${{ secrets.SSH_PASSWORD }}
+          run: |
+            docker pull norden37/example_site:latest 
+            docker stop example_site
+            docker rm example_site
+            docker run -e DOMAIN=${{ vars.MY_DOMAIN_HOME }} --name example_site -p 80:80 -d norden37/example_site
