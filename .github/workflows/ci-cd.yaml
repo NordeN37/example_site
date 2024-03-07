@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Build and Push Docker Images
         run: |
-          docker build -t example_site .
+          docker build -f .\DOCKERFILE .
           docker tag example_site:latest norden37/example_site:latest
           docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASS }}
           docker push norden37/example_site:latest
