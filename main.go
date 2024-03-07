@@ -10,10 +10,12 @@ import (
 )
 
 type Server struct {
-	Domain string `env:"DOMAIN"`
+	Domain    string
+	CertEmail string
 }
 
 func (s *Server) redirectTLS(w http.ResponseWriter, r *http.Request) {
+	log.Println("Domain: ", s.Domain)
 	http.Redirect(w, r, "https://"+s.Domain+":443"+r.RequestURI, http.StatusMovedPermanently)
 }
 
@@ -21,7 +23,8 @@ func main() {
 	cfg := config.New()
 
 	server := &Server{
-		Domain: cfg.Domain,
+		Domain:    cfg.Domain,
+		CertEmail: cfg.Email,
 	}
 
 	tmpl, err := template.ParseFiles("index.html")
@@ -44,6 +47,16 @@ func main() {
 		}
 		w.WriteHeader(200)
 	})
-
-	log.Fatal(http.Serve(autocert.NewListener(server.Domain), r))
+	m := &autocert.Manager{
+		Cache:      autocert.DirCache("secret-dir"),
+		Prompt:     autocert.AcceptTOS,
+		Email:      server.CertEmail,
+		HostPolicy: autocert.HostWhitelist(server.Domain),
+	}
+	s := &http.Server{
+		Addr:      ":https",
+		Handler:   r,
+		TLSConfig: m.TLSConfig(),
+	}
+	log.Fatal(s.ListenAndServeTLS("", ""))
 }

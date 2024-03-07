@@ -4,11 +4,13 @@ import "os"
 
 type Config struct {
 	Domain string
+	Email  string
 }
 
 func New() *Config {
 	return &Config{
 		Domain: getEnv("DOMAIN", ""),
+		Email:  getEnv("EMAIL", ""),
 	}
 }
 
