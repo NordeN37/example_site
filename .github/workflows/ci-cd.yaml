@@ -6,18 +6,14 @@ on:
       - main
 
 jobs:
-  checkout:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
   build:
     runs-on: ubuntu-latest
     needs: checkout
     steps:
       - name: Build and Push Docker Images
+        uses: actions/checkout@v2
         run: |
-          docker build -f .\DOCKERFILE .
+          docker build -t example_site .
           docker tag example_site:latest norden37/example_site:latest
           docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASS }}
           docker push norden37/example_site:latest
