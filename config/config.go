@@ -6,6 +6,7 @@ import (
 )
 
 type Config struct {
+	LogLevel string `envconfig:"LOG_LEVEL" default:"debug"`
 	TLSConfig
 }
 

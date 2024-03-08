@@ -4,6 +4,17 @@ github.com/gorilla/mux
 # github.com/kelseyhightower/envconfig v1.4.0
 ## explicit
 github.com/kelseyhightower/envconfig
+# github.com/mattn/go-colorable v0.1.13
+## explicit; go 1.15
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.19
+## explicit; go 1.15
+github.com/mattn/go-isatty
+# github.com/rs/zerolog v1.32.0
+## explicit; go 1.15
+github.com/rs/zerolog
+github.com/rs/zerolog/internal/cbor
+github.com/rs/zerolog/internal/json
 # golang.org/x/crypto v0.21.0
 ## explicit; go 1.18
 golang.org/x/crypto/acme
@@ -11,6 +22,9 @@ golang.org/x/crypto/acme/autocert
 # golang.org/x/net v0.21.0
 ## explicit; go 1.18
 golang.org/x/net/idna
+# golang.org/x/sys v0.18.0
+## explicit; go 1.18
+golang.org/x/sys/unix
 # golang.org/x/text v0.14.0
 ## explicit; go 1.18
 golang.org/x/text/secure/bidirule
