@@ -37,4 +37,4 @@ jobs:
             docker stop example_site
             docker rm example_site
             docker rmi -f $(docker images norden37/example_site -q)
-            docker run -e DOMAIN=${{ vars.MY_DOMAIN_HOME }} -e EMAIL=${{ vars.EMAIL }} --name example_site -p 80:80 -p 443:443 -d norden37/example_site
+            docker run -e DOMAIN=${{ vars.MY_DOMAIN_HOME }} -e EMAIL=${{ vars.EMAIL }} -e CREATE_TLS_CONFIG=${{ vars.CREATE_TLS_CONFIG }} --name example_site -p 80:80 -p 443:443 -d norden37/example_site

@@ -1,22 +1,24 @@
 package config
 
-import "os"
+import (
+	"github.com/kelseyhightower/envconfig"
+	"log"
+)
 
 type Config struct {
-	Domain string
-	Email  string
+	TLSConfig
+}
+
+type TLSConfig struct {
+	CreateTLSConfig bool   `envconfig:"CREATE_TLS_CONFIG" default:"false"` // create TLSConfig and run https
+	Domain          string `envconfig:"DOMAIN" default:"example.com"`      // domain example: example.com
+	Email           string `envconfig:"EMAIL" default:"example@gmail.com"` // email
 }
 
 func New() *Config {
-	return &Config{
-		Domain: getEnv("DOMAIN", ""),
-		Email:  getEnv("EMAIL", ""),
+	cfg := Config{}
+	if err := envconfig.Process("", &cfg); err != nil {
+		log.Fatalf("failed to load envconfig, err: %s", err)
 	}
-}
-
-func getEnv(key string, defaultVal string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
-	}
-	return defaultVal
+	return &cfg
 }
