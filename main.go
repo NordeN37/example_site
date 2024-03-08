@@ -7,6 +7,7 @@ import (
 	"github.com/rs/zerolog"
 	"golang.org/x/crypto/acme/autocert"
 	"html/template"
+	"log"
 	"net/http"
 )
 
@@ -55,20 +56,7 @@ func main() {
 				server.log.Fatal().Err(err).Send()
 			}
 		}()
-		m := &autocert.Manager{
-			Cache:      autocert.DirCache("secret-dir"),
-			Prompt:     autocert.AcceptTOS,
-			Email:      server.config.Email,
-			HostPolicy: autocert.HostWhitelist(server.config.Domain),
-		}
-		s := &http.Server{
-			Addr:      ":https",
-			Handler:   r,
-			TLSConfig: m.TLSConfig(),
-		}
-		if err := s.ListenAndServeTLS("", ""); err != nil {
-			server.log.Fatal().Err(err).Send()
-		}
+		log.Fatal(http.Serve(autocert.NewListener(server.config.Domain), r))
 	}
 
 	if err := http.ListenAndServe(":80", r); err != nil {
