@@ -32,6 +32,7 @@ func (s *Server) Home(w http.ResponseWriter, r *http.Request) {
 func main() {
 	cfg := config.New()
 	logg := logger.New(cfg.LogLevel)
+	logg.Info().Interface("cfg", cfg).Send()
 	tmpl, err := template.ParseFiles("template/startbootstrap-freelancer-gh-pages/index.html")
 	if err != nil {
 		logg.Fatal().Err(err).Send()
